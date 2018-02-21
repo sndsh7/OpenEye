@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sandeshagawane.openeye.LoginActivity"
-    android:background="@drawable/bg">
+    tools:context="com.example.sandeshagawane.openeye.VoterIdRegActivity"
+    android:background="@drawable/bg"
+    >
 
     <ImageView
         android:id="@+id/logo"
@@ -20,10 +21,10 @@
         app:srcCompat="@drawable/logo" android:contentDescription="@string/logo" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/voterId_no"
         android:layout_width="0dp"
-        android:background="@drawable/username"
-        android:hint="@string/username"
+        android:background="@drawable/enter_mobile_no"
+        android:hint="Voter ID no."
         android:textAlignment="center"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -35,26 +36,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/password"
-        android:ems="10"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:labelFor="@id/password"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
-
     <Button
-        android:id="@+id/login_btn"
+        android:id="@+id/cheack_btn"
         android:textAllCaps="false"
         android:textSize="18sp"
         android:layout_width="wrap_content"
@@ -63,25 +46,25 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/login_btn"
-        android:text="Login"
+        android:text="Cheack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/voterId_no" />
 
     <Button
-        android:id="@+id/new_reg"
+        android:id="@+id/backToReg"
         android:textSize="18sp"
         android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/new_reg"
-        android:text="Have Not Registered ?"
+        android:text="Back To Another Option"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
-        android:id="@+id/login_Progress"
+        android:id="@+id/mobile_Progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -91,21 +74,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="invisible" />
-
-    <Button
-        android:id="@+id/forget_btn"
-        style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:text="Forget ID and Pass..."
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_btn" />
-
 
 </android.support.constraint.ConstraintLayout>
