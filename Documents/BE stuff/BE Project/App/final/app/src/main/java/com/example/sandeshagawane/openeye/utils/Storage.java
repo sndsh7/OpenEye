@@ -14,7 +14,7 @@ import java.io.OutputStreamWriter;
 /**
  * Class to save data into internal storage
  * This data gets deleted when the app is uninstalled
- * Created by RajinderPal on 6/16/2016.
+ * Created by Sandesh V Agawane 23 Feb 2018
  */
 public class Storage {
     protected Context mContext;

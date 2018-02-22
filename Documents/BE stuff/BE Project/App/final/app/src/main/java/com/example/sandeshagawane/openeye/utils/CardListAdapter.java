@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 /**
  * Adapter class to inflate saved Aadharcard list
- * Created by RajinderPal on 6/22/2016.
+ * Created by Sandesh V Agawane 23 Feb 2018
  */
 public class CardListAdapter extends ArrayAdapter<ArrayList> {
 

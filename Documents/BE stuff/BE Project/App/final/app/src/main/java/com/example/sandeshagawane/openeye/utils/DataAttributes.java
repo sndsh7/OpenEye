@@ -1,7 +1,7 @@
 package com.example.sandeshagawane.openeye.utils;
 
 /**
- * Created by RajinderPal on 6/22/2016.
+ * Created by Sandesh V Agawane 23 Feb 2018
  */
 public class DataAttributes {
     // declare xml attributes of aadhar card QR code xml response
