@@ -11,6 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.Toolbar>
 
         <ImageView
         android:id="@+id/qr_logo"
@@ -22,7 +30,7 @@
         android:contentDescription="@string/ic_qr_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_progress"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
         app:srcCompat="@drawable/ic_qr" />
 
     <ProgressBar
@@ -46,6 +54,7 @@
         android:contentDescription="@string/qr_scan_btn"
         android:text="@string/scan_qr_code"
         android:textAllCaps="false"
+        android:onClick="scanNow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qr_logo" />
@@ -186,26 +195,26 @@
         app:layout_constraintTop_toBottomOf="@+id/gender_field">
 
         <TextView
-            android:id="@+id/textDOB"
+            android:id="@+id/textYOB"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/textDOB"
+            android:text="@string/textYOB"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editDOB"
+            android:id="@+id/editYOB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:cursorVisible="false"
             android:ems="10"
             android:focusable="false"
-            android:hint="@string/date_of_birth"
+            android:hint="@string/editYOB"
             android:inputType="date|textPersonName"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -214,7 +223,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/password_field"
+        android:id="@+id/co_field"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="5dp"
@@ -226,102 +235,26 @@
         app:layout_constraintTop_toBottomOf="@+id/dob_field">
 
         <TextView
-            android:id="@+id/textPass"
+            android:id="@+id/textCO"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/password"
+            android:text="@string/text_co"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editPass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:hint="@string/editPass1"
-            android:inputType="textPassword"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="1dp" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/ConfPass_field"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="5dp"
-        android:maxHeight="48dp"
-        android:minHeight="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.74"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_field">
-
-        <TextView
-            android:id="@+id/textConfPass"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/textConPass"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/editConfPass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:hint="@string/editPass"
-            android:inputType="textPassword"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="1dp" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/address_field"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="5dp"
-        android:maxHeight="48dp"
-        android:minHeight="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.74"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ConfPass_field">
-
-        <TextView
-            android:id="@+id/textAddress"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/textAddress"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/editAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:cursorVisible="false"
-            android:ems="10"
+            android:id="@+id/editCO"
             android:focusable="false"
-            android:hint="@string/address"
+            android:cursorVisible="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="@string/edit_co"
             android:inputType="textPersonName"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -330,7 +263,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/mobile_field"
+        android:id="@+id/vtc_field"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="5dp"
@@ -339,29 +272,109 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.74"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address_field">
+        app:layout_constraintTop_toBottomOf="@+id/co_field">
 
         <TextView
-            android:id="@+id/textMobile"
+            android:id="@+id/textVTC"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/textMobile"
+            android:text="@string/text_village_tehsil"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editMobile"
+            android:id="@+id/editVTC"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="@string/text_village_tehsil"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="1dp" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/po_field"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:maxHeight="48dp"
+        android:minHeight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vtc_field">
+
+        <TextView
+            android:id="@+id/textPO"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/post_office"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editPO"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:cursorVisible="false"
             android:ems="10"
             android:focusable="false"
-            android:hint="@string/mobile_no"
+            android:hint="@string/post_office"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="1dp" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/dist_field"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:maxHeight="48dp"
+        android:minHeight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/po_field">
+
+        <TextView
+            android:id="@+id/textDist"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/district"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editDist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/district"
             android:inputType="numberDecimal"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -371,7 +384,7 @@
 
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/email_field"
+        android:id="@+id/state_field"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="5dp"
@@ -380,28 +393,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.74"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mobile_field">
+        app:layout_constraintTop_toBottomOf="@+id/dist_field">
 
         <TextView
-            android:id="@+id/textMail"
+            android:id="@+id/textState"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/textEmail"
+            android:text="@string/state"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editEmail"
+            android:id="@+id/editState"
+            android:cursorVisible="false"
+            android:focusable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:ems="10"
-            android:hint="@string/email"
+            android:hint="@string/state"
             android:inputType="textEmailAddress"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -409,17 +424,60 @@
             tools:ignore="MissingConstraints" />
     </android.support.constraint.ConstraintLayout>
 
-        <Button
-            android:id="@+id/BackToMReg"
-            android:background="@drawable/back_btn"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/PC_field"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:maxHeight="48dp"
+        android:minHeight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/state_field">
+
+        <TextView
+            android:id="@+id/textPC"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:text="@string/postal_code"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <EditText
+            android:id="@+id/editPC"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="@string/postal_code"
+            android:inputType="number"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
     </android.support.constraint.ConstraintLayout>
 
+
+    <Button
+        android:id="@+id/BackToMReg"
+        android:background="@drawable/back_btn"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

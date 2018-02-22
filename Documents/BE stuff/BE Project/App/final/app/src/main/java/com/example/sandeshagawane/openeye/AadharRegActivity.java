@@ -1,22 +1,50 @@
 package com.example.sandeshagawane.openeye;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.sandeshagawane.openeye.utils.DataAttributes;
+import com.example.sandeshagawane.openeye.utils.Storage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 public class AadharRegActivity extends AppCompatActivity {
-    public static TextView tv_sd_uid,tv_sd_name,tv_sd_gender,tv_sd_yob,tv_sd_vtc,tv_sd_password,tv_sd_conpass,tv_sd_mob;
-    public static String uid,state,country;
+    // variables to store extracted xml data
+    String uid,name,gender,yearOfBirth,careOf,villageTehsil,postOffice,district,state,postCode;
+
+    // UI Elements
+    TextView tv_sd_uid,tv_sd_name,tv_sd_gender,tv_sd_yob,tv_sd_co,tv_sd_vtc,tv_sd_po,tv_sd_dist,
+            tv_sd_state,tv_sd_pc;
+
     private FirebaseAuth mAuth;
     private Button BacktoReg,QRScanBtn;
     private ProgressBar AadharProgress;
+
+    Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,27 +53,22 @@ public class AadharRegActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        tv_sd_uid = (TextView)findViewById(R.id.editUid);
         tv_sd_name = (TextView)findViewById(R.id.editName);
-        tv_sd_uid= (TextView)findViewById(R.id.editUid);
         tv_sd_gender = (TextView)findViewById(R.id.editGender);
-        tv_sd_yob = (TextView)findViewById(R.id.editDOB);
-        tv_sd_vtc = (TextView)findViewById(R.id.editAddress);
-        tv_sd_password= (TextView)findViewById(R.id.editPass);
-        tv_sd_conpass= (TextView)findViewById(R.id.editConfPass);
-        tv_sd_mob= (TextView)findViewById(R.id.editMobile);
-        BacktoReg=(Button)findViewById(R.id.BackToMReg);
-        QRScanBtn=(Button)findViewById(R.id.QRScanBtn);
+        tv_sd_yob = (TextView)findViewById(R.id.editYOB);
+        tv_sd_co = (TextView)findViewById(R.id.editCO);
+        tv_sd_vtc = (TextView)findViewById(R.id.editVTC);
+        tv_sd_po = (TextView)findViewById(R.id.editPO);
+        tv_sd_dist = (TextView)findViewById(R.id.editDist);
+        tv_sd_state = (TextView)findViewById(R.id.editState);
+        tv_sd_pc = (TextView)findViewById(R.id.editPC);
+        BacktoReg= findViewById(R.id.BackToMReg);
+        QRScanBtn= findViewById(R.id.QRScanBtn);
 
+        //int Storage
+        storage = new Storage(this);
 
-        //On click Listner
-        QRScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent QRScanIntent = new Intent(AadharRegActivity.this, QRScanActivity.class);
-                startActivity(QRScanIntent);
-                finish();
-            }
-        });
 
         BacktoReg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +82,234 @@ public class AadharRegActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * onclick handler for scan new card
+     * @param view
+     */
+    public void scanNow( View view){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(ContextCompat.checkSelfPermission(AadharRegActivity.this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(AadharRegActivity.this,"Permission Denied",Toast.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(AadharRegActivity.this,new String[]{Manifest.permission.CAMERA},1);
+            }else{
+                Toast.makeText(AadharRegActivity.this,"You already have Permission",Toast.LENGTH_LONG).show();
+            }
+        }
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+        integrator.setPrompt("Scan a Aadharcard QR Code");
+        integrator.setResultDisplayDuration(500);
+        integrator.setCameraId(0);  // Use a specific camera of the device
+        integrator.initiateScan();
+    }
+
+    /**
+     * function handle scan result
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //retrieve scan result
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        if (scanningResult != null) {
+            //we have a result
+            String scanContent = scanningResult.getContents();
+            String scanFormat = scanningResult.getFormatName();
+
+            // process received data
+            if(scanContent != null && !scanContent.isEmpty()){
+                processScannedData(scanContent);
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"Scan Cancelled", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+        }else{
+            Toast toast = Toast.makeText(getApplicationContext(),"No scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    /**
+     * process xml string received from aadhaar card QR code
+     * @param scanData
+     */
+    protected void processScannedData(String scanData){
+        Log.d("Rajdeol",scanData);
+        XmlPullParserFactory pullParserFactory;
+
+        try {
+            // init the parserfactory
+            pullParserFactory = XmlPullParserFactory.newInstance();
+            // get the parser
+            XmlPullParser parser = pullParserFactory.newPullParser();
+
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(new StringReader(scanData));
+
+            // parse the XML
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if(eventType == XmlPullParser.START_DOCUMENT) {
+                    Log.d("Rajdeol","Start document");
+                } else if(eventType == XmlPullParser.START_TAG && DataAttributes.AADHAAR_DATA_TAG.equals(parser.getName())) {
+                    // extract data from tag
+                    //uid
+                    uid = parser.getAttributeValue(null,DataAttributes.AADHAR_UID_ATTR);
+                    //name
+                    name = parser.getAttributeValue(null,DataAttributes.AADHAR_NAME_ATTR);
+                    //gender
+                    gender = parser.getAttributeValue(null,DataAttributes.AADHAR_GENDER_ATTR);
+                    // year of birth
+                    yearOfBirth = parser.getAttributeValue(null,DataAttributes.AADHAR_YOB_ATTR);
+                    // care of
+                    careOf = parser.getAttributeValue(null,DataAttributes.AADHAR_CO_ATTR);
+                    // village Tehsil
+                    villageTehsil = parser.getAttributeValue(null,DataAttributes.AADHAR_VTC_ATTR);
+                    // Post Office
+                    postOffice = parser.getAttributeValue(null,DataAttributes.AADHAR_PO_ATTR);
+                    // district
+                    district = parser.getAttributeValue(null,DataAttributes.AADHAR_DIST_ATTR);
+                    // state
+                    state = parser.getAttributeValue(null,DataAttributes.AADHAR_STATE_ATTR);
+                    // Post Code
+                    postCode = parser.getAttributeValue(null,DataAttributes.AADHAR_PC_ATTR);
+
+                } else if(eventType == XmlPullParser.END_TAG) {
+                    Log.d("Rajdeol","End tag "+parser.getName());
+
+                } else if(eventType == XmlPullParser.TEXT) {
+                    Log.d("Rajdeol","Text "+parser.getText());
+
+                }
+                // update eventType
+                eventType = parser.next();
+            }
+
+            // display the data on screen
+            displayScannedData();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }// EO function
+
+    /**
+     * show scanned information
+     */
+    public void displayScannedData(){
+        //ll_data_wrapper.setVisibility(View.GONE);
+        //ll_scanned_data_wrapper.setVisibility(View.VISIBLE);
+        //ll_action_button_wrapper.setVisibility(View.VISIBLE);
+
+        // clear old values if any
+        tv_sd_uid.setText("");
+        tv_sd_name.setText("");
+        tv_sd_gender.setText("");
+        tv_sd_yob.setText("");
+        tv_sd_co.setText("");
+        tv_sd_vtc.setText("");
+        tv_sd_po.setText("");
+        tv_sd_dist.setText("");
+        tv_sd_state.setText("");
+        tv_sd_pc.setText("");
+
+        // update UI Elements
+        tv_sd_uid.setText(uid);
+        tv_sd_name.setText(name);
+        tv_sd_gender.setText(gender);
+        tv_sd_yob.setText(yearOfBirth);
+        tv_sd_co.setText(careOf);
+        tv_sd_vtc.setText(villageTehsil);
+        tv_sd_po.setText(postOffice);
+        tv_sd_dist.setText(district);
+        tv_sd_state.setText(state);
+        tv_sd_pc.setText(postCode);
+    }
+
+    /**
+     * save data to storage
+     */
+    public void saveData(View view){
+        // We are going to use json to save our data
+        // create json object
+        JSONObject aadhaarData = new JSONObject();
+        try {
+            aadhaarData.put(DataAttributes.AADHAR_UID_ATTR, uid);
+
+            if(name == null){name = "";}
+            aadhaarData.put(DataAttributes.AADHAR_NAME_ATTR, name);
+
+            if(gender == null){gender = "";}
+            aadhaarData.put(DataAttributes.AADHAR_GENDER_ATTR, gender);
+
+            if(yearOfBirth == null){yearOfBirth = "";}
+            aadhaarData.put(DataAttributes.AADHAR_YOB_ATTR, yearOfBirth);
+
+            if(careOf == null){careOf = "";}
+            aadhaarData.put(DataAttributes.AADHAR_CO_ATTR, careOf);
+
+            if(villageTehsil == null){villageTehsil = "";}
+            aadhaarData.put(DataAttributes.AADHAR_VTC_ATTR, villageTehsil);
+
+            if(postOffice == null){postOffice = "";}
+            aadhaarData.put(DataAttributes.AADHAR_PO_ATTR, postOffice);
+
+            if(district == null){district = "";}
+            aadhaarData.put(DataAttributes.AADHAR_DIST_ATTR, district);
+
+            if(state == null){state = "";}
+            aadhaarData.put(DataAttributes.AADHAR_STATE_ATTR, state);
+
+            if(postCode == null){postCode = "";}
+            aadhaarData.put(DataAttributes.AADHAR_PC_ATTR, postCode);
+
+            // read data from storage
+            String storageData = storage.readFromFile();
+
+            JSONArray storageDataArray;
+            //check if file is empty
+            if(storageData.length() > 0){
+                storageDataArray = new JSONArray(storageData);
+            }else{
+                storageDataArray = new JSONArray();
+            }
+
+
+            // check if storage is empty
+            if(storageDataArray.length() > 0){
+                // check if data already exists
+                for(int i = 0; i<storageDataArray.length();i++){
+                    String dataUid = storageDataArray.getJSONObject(i).getString(DataAttributes.AADHAR_UID_ATTR);
+                    if(uid.equals(dataUid)){
+                        // do not save anything and go back
+                        // show home screen
+                       // tv_cancel_action.performClick();
+
+                        return;
+                    }
+                }
+            }
+            // add the aadhaar data
+            storageDataArray.put(aadhaarData);
+            // save the aadhaardata
+            storage.writeToFile(storageDataArray.toString());
+
+            // show home screen
+            //tv_cancel_action.performClick();
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     protected void onStart() {
         super.onStart();
