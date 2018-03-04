@@ -5,20 +5,29 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sandeshagawane.openeye.utils.DataAttributes;
+import com.example.sandeshagawane.openeye.utils.NewUserDatabaseAdapter;
 import com.example.sandeshagawane.openeye.utils.Storage;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -40,9 +49,11 @@ public class AadharRegActivity extends AppCompatActivity {
     TextView tv_sd_uid,tv_sd_name,tv_sd_gender,tv_sd_yob,tv_sd_co,tv_sd_vtc,tv_sd_po,tv_sd_dist,
             tv_sd_state,tv_sd_pc;
 
+    private EditText voterId,mobileNo,email,password,confPassword;
     private FirebaseAuth mAuth;
-    private Button BacktoReg,QRScanBtn;
-    private ProgressBar AadharProgress;
+    private DatabaseReference mDatabaseUser;
+    private Button BacktoReg,QRScanBtn,RegBtn;
+    private ProgressBar AadharRegProgress;
 
     Storage storage;
 
@@ -52,6 +63,8 @@ public class AadharRegActivity extends AppCompatActivity {
         setContentView(R.layout.activity_aadhar_reg);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference("Users");
+        AadharRegProgress= (ProgressBar)findViewById(R.id.uid_reg_progress);
 
         tv_sd_uid = (TextView)findViewById(R.id.editUid);
         tv_sd_name = (TextView)findViewById(R.id.editName);
@@ -65,6 +78,71 @@ public class AadharRegActivity extends AppCompatActivity {
         tv_sd_pc = (TextView)findViewById(R.id.editPC);
         BacktoReg= findViewById(R.id.BackToMReg);
         QRScanBtn= findViewById(R.id.QRScanBtn);
+        RegBtn=(Button)findViewById(R.id.uid_reg_btn);
+
+        //Edit text that available to user for fill details
+        email=(EditText)findViewById(R.id.editEmail);
+        voterId=(EditText)findViewById(R.id.editVoterID);
+        mobileNo=(EditText)findViewById(R.id.editMobile);
+        password=(EditText)findViewById(R.id.editPassword);
+        confPassword=(EditText)findViewById(R.id.editCPassword);
+
+        //Registration Processs Creating Account on Firebase
+        RegBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String Email = email.getText().toString();
+                String pass = password.getText().toString();
+                String confirm_pass= confPassword.getText().toString();
+                String UID = tv_sd_uid.getText().toString();
+                String Name = tv_sd_name.getText().toString();
+                String Gender = tv_sd_gender.getText().toString();
+
+                if(!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(confirm_pass)){
+
+                    if(!TextUtils.isEmpty(UID) && !TextUtils.isEmpty(Name) && !TextUtils.isEmpty(Gender)){
+                        //Scan data store to firebase database
+                        addUser();
+
+                    if(pass.equals(confirm_pass)){
+
+                        AadharRegProgress.setVisibility(View.VISIBLE);
+                        mAuth.createUserWithEmailAndPassword(Email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if(task.isSuccessful()){
+                                    Intent setupIntent = new Intent(AadharRegActivity.this,SetupActivity.class);
+                                    startActivity(setupIntent);
+                                    finish();
+                                    Toast.makeText(AadharRegActivity.this,"New Account created Succsessfully",Toast.LENGTH_LONG).show();
+
+                                }else {
+
+                                    String errorMessage = task.getException().getMessage();
+                                    Toast.makeText(AadharRegActivity.this,"Error :" +errorMessage,Toast.LENGTH_LONG).show();
+                                }
+
+                                AadharRegProgress.setVisibility(View.INVISIBLE);
+
+                            }
+                        });
+                    }else {
+
+                        Toast.makeText(AadharRegActivity.this, "Confirm Password and Password Field doesn't match.", Toast.LENGTH_LONG).show();
+
+                    }
+                    }else{
+                        Toast.makeText(AadharRegActivity.this,"Please Scan the Aadhaar QR ",Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+             }
+         });
+
+
 
         //int Storage
         storage = new Storage(this);
@@ -82,6 +160,34 @@ public class AadharRegActivity extends AppCompatActivity {
 
 
     }
+    //Scan data store to firebase database
+    private void addUser() {
+
+        String uid = tv_sd_uid.getText().toString().trim();
+        String name = tv_sd_name.getText().toString().trim();
+        String gender = tv_sd_gender.getText().toString().trim();
+        String YOB = tv_sd_yob.getText().toString().trim();
+        String careOf = tv_sd_co.getText().toString().trim();
+        String VTC = tv_sd_vtc.getText().toString().trim();
+        String dist = tv_sd_dist.getText().toString().trim();
+        String state = tv_sd_state.getText().toString().trim();
+        String postOffice = tv_sd_po.getText().toString().trim();
+        String postCode = tv_sd_pc.getText().toString().trim();
+
+        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(name) && !TextUtils.isEmpty(gender) && !TextUtils.isEmpty(YOB) && !TextUtils.isEmpty(careOf) && !TextUtils.isEmpty(dist) && !TextUtils.isEmpty(VTC)&& !TextUtils.isEmpty(state) && !TextUtils.isEmpty(postCode)){
+
+            String id = mDatabaseUser.push().getKey();
+
+            NewUserDatabaseAdapter User = new NewUserDatabaseAdapter(id,uid,name,gender,YOB,careOf,VTC,dist,state,postCode,postOffice);
+
+            mDatabaseUser.child(id).setValue(User);
+
+        }else {
+            Toast.makeText(this,"Database store Error :",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
     /**
      * onclick handler for scan new card
@@ -99,6 +205,7 @@ public class AadharRegActivity extends AppCompatActivity {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
         integrator.setPrompt("Scan a Aadharcard QR Code");
+        integrator.setPrompt("Volume keys to Enable/Disable Flash");
         integrator.setResultDisplayDuration(500);
         integrator.setCameraId(0);  // Use a specific camera of the device
         integrator.initiateScan();
