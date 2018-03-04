@@ -20,7 +20,7 @@ public class SetupActivity extends AppCompatActivity {
         //toolbar
         setupToolBar= (android.support.v7.widget.Toolbar) findViewById(R.id.setupToolbar);
         setSupportActionBar(setupToolBar);
-        getSupportActionBar().setTitle("Setup Profile");
+        getSupportActionBar().setTitle("Account Setup");
 
 
     }

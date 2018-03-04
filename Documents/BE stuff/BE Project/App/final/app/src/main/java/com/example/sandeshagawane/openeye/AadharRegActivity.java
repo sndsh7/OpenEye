@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -52,7 +53,8 @@ public class AadharRegActivity extends AppCompatActivity {
     private EditText voterId,mobileNo,email,password,confPassword;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUser;
-    private Button BacktoReg,QRScanBtn,RegBtn;
+    private Button QRScanBtn,RegBtn;
+    private FloatingActionButton BacktoReg;
     private ProgressBar AadharRegProgress;
 
     Storage storage;
@@ -76,8 +78,8 @@ public class AadharRegActivity extends AppCompatActivity {
         tv_sd_dist = (TextView)findViewById(R.id.editDist);
         tv_sd_state = (TextView)findViewById(R.id.editState);
         tv_sd_pc = (TextView)findViewById(R.id.editPC);
-        BacktoReg= findViewById(R.id.BackToMReg);
-        QRScanBtn= findViewById(R.id.QRScanBtn);
+        BacktoReg=(FloatingActionButton) findViewById(R.id.BackToMReg);
+        QRScanBtn=findViewById(R.id.QRScanBtn);
         RegBtn=(Button)findViewById(R.id.uid_reg_btn);
 
         //Edit text that available to user for fill details
@@ -106,28 +108,36 @@ public class AadharRegActivity extends AppCompatActivity {
 
                     if(pass.equals(confirm_pass)){
 
-                        AadharRegProgress.setVisibility(View.VISIBLE);
-                        mAuth.createUserWithEmailAndPassword(Email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        if(!mDatabaseUser.child(uid).equals(mDatabaseUser.child(uid))) {
 
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                if(task.isSuccessful()){
-                                    Intent setupIntent = new Intent(AadharRegActivity.this,SetupActivity.class);
-                                    startActivity(setupIntent);
-                                    finish();
-                                    Toast.makeText(AadharRegActivity.this,"New Account created Succsessfully",Toast.LENGTH_LONG).show();
+                            AadharRegProgress.setVisibility(View.VISIBLE);
+                            mAuth.createUserWithEmailAndPassword(Email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                                }else {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    String errorMessage = task.getException().getMessage();
-                                    Toast.makeText(AadharRegActivity.this,"Error :" +errorMessage,Toast.LENGTH_LONG).show();
+                                    if (task.isSuccessful()) {
+                                        Intent setupIntent = new Intent(AadharRegActivity.this, SetupActivity.class);
+                                        startActivity(setupIntent);
+                                        finish();
+                                        Toast.makeText(AadharRegActivity.this, "New Account created Succsessfully", Toast.LENGTH_LONG).show();
+
+                                    } else {
+
+                                        String errorMessage = task.getException().getMessage();
+                                        Toast.makeText(AadharRegActivity.this, "Error :" + errorMessage, Toast.LENGTH_LONG).show();
+                                    }
+
+                                    AadharRegProgress.setVisibility(View.INVISIBLE);
+
                                 }
+                            });
+                        }else {
+                            Toast.makeText(AadharRegActivity.this,"This Aadhaar User Already exist please goto login page or forget id & pass page ",Toast.LENGTH_LONG).show();
+                        }
 
-                                AadharRegProgress.setVisibility(View.INVISIBLE);
 
-                            }
-                        });
                     }else {
 
                         Toast.makeText(AadharRegActivity.this, "Confirm Password and Password Field doesn't match.", Toast.LENGTH_LONG).show();
@@ -137,6 +147,8 @@ public class AadharRegActivity extends AppCompatActivity {
                         Toast.makeText(AadharRegActivity.this,"Please Scan the Aadhaar QR ",Toast.LENGTH_LONG).show();
                     }
 
+                }else{
+                    Toast.makeText(AadharRegActivity.this,"Please fill the details",Toast.LENGTH_LONG).show();
                 }
 
              }
@@ -176,11 +188,12 @@ public class AadharRegActivity extends AppCompatActivity {
 
         if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(name) && !TextUtils.isEmpty(gender) && !TextUtils.isEmpty(YOB) && !TextUtils.isEmpty(careOf) && !TextUtils.isEmpty(dist) && !TextUtils.isEmpty(VTC)&& !TextUtils.isEmpty(state) && !TextUtils.isEmpty(postCode)){
 
-            String id = mDatabaseUser.push().getKey();
+            //IF we want to generate new automatic key
+            //String id = mDatabaseUser.push().getKey();
 
-            NewUserDatabaseAdapter User = new NewUserDatabaseAdapter(id,uid,name,gender,YOB,careOf,VTC,dist,state,postCode,postOffice);
+            NewUserDatabaseAdapter User = new NewUserDatabaseAdapter(uid,uid,name,gender,YOB,careOf,VTC,dist,state,postCode,postOffice);
 
-            mDatabaseUser.child(id).setValue(User);
+            mDatabaseUser.child(uid).setValue(User);
 
         }else {
             Toast.makeText(this,"Database store Error :",Toast.LENGTH_LONG).show();

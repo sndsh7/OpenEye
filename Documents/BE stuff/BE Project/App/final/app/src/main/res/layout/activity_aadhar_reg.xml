@@ -38,6 +38,19 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="invisible" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/BackToMReg"
+            android:layout_width="wrap_content"
+            android:forceHasOverlappingRendering="true"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_btn" />
+
         <Button
             android:id="@+id/QRScanBtn"
             android:layout_width="0dp"
@@ -717,16 +730,6 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/BackToMReg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:clickable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/back_btn" android:focusable="true"/>
 
     </android.support.constraint.ConstraintLayout>
 
