@@ -62,9 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_logoutBtn:
 
-                logOut();
+                logOut_activity();
 
             return true;
+
+            case R.id.action_setup_btn:
+
+                setup_activity();
+                return true;
 
             default:
                 return false;
@@ -72,7 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void logOut() {
+    private void setup_activity() {
+        Intent setupIntent = new Intent(MainActivity.this,SetupActivity.class);
+        startActivity(setupIntent);
+        finish();
+    }
+
+    private void logOut_activity() {
         mAuth.signOut();
         sendTologin();
 

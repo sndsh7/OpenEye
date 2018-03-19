@@ -81,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                     });
+                }else{
+                    Toast.makeText(LoginActivity.this,"Please fill username and password",Toast.LENGTH_LONG).show();
                 }
 
 

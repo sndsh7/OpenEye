@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -47,7 +48,7 @@ public class AadharRegActivity extends AppCompatActivity {
     String uid,name,gender,yearOfBirth,careOf,villageTehsil,postOffice,district,state,postCode;
 
     // UI Elements
-    TextView tv_sd_uid,tv_sd_name,tv_sd_gender,tv_sd_yob,tv_sd_co,tv_sd_vtc,tv_sd_po,tv_sd_dist,
+    public static TextView tv_sd_uid,tv_sd_name,tv_sd_gender,tv_sd_yob,tv_sd_co,tv_sd_vtc,tv_sd_po,tv_sd_dist,
             tv_sd_state,tv_sd_pc;
 
     private EditText voterId,mobileNo,email,password,confPassword;
@@ -56,6 +57,7 @@ public class AadharRegActivity extends AppCompatActivity {
     private Button QRScanBtn,RegBtn;
     private FloatingActionButton BacktoReg;
     private ProgressBar AadharRegProgress;
+    String user_id;
 
     Storage storage;
 
@@ -89,6 +91,18 @@ public class AadharRegActivity extends AppCompatActivity {
         password=(EditText)findViewById(R.id.editPassword);
         confPassword=(EditText)findViewById(R.id.editCPassword);
 
+        //Retrive Data
+        mDatabaseUser.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                user_id = dataSnapshot.child("Users").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
         //Registration Processs Creating Account on Firebase
         RegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,49 +114,51 @@ public class AadharRegActivity extends AppCompatActivity {
                 String Name = tv_sd_name.getText().toString();
                 String Gender = tv_sd_gender.getText().toString();
 
+
                 if(!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(confirm_pass)){
 
                     if(!TextUtils.isEmpty(UID) && !TextUtils.isEmpty(Name) && !TextUtils.isEmpty(Gender)){
                         //Scan data store to firebase database
-                        addUser();
+                        if(!TextUtils.equals(UID, user_id)){
 
-                    if(pass.equals(confirm_pass)){
+                            Toast.makeText(AadharRegActivity.this,""+user_id,Toast.LENGTH_LONG).show();
 
-                        if(!mDatabaseUser.child(uid).equals(mDatabaseUser.child(uid))) {
+                            if(pass.equals(confirm_pass)){
 
+                                AadharRegProgress.setVisibility(View.VISIBLE);
+                                addUser();
+                                mAuth.createUserWithEmailAndPassword(Email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                            AadharRegProgress.setVisibility(View.VISIBLE);
-                            mAuth.createUserWithEmailAndPassword(Email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent setupIntent = new Intent(AadharRegActivity.this, SetupActivity.class);
+                                            startActivity(setupIntent);
+                                            finish();
+                                            Toast.makeText(AadharRegActivity.this, "New Account created Succsessfully", Toast.LENGTH_LONG).show();
 
-                                    if (task.isSuccessful()) {
-                                        Intent setupIntent = new Intent(AadharRegActivity.this, SetupActivity.class);
-                                        startActivity(setupIntent);
-                                        finish();
-                                        Toast.makeText(AadharRegActivity.this, "New Account created Succsessfully", Toast.LENGTH_LONG).show();
+                                        } else {
 
-                                    } else {
+                                            String errorMessage = task.getException().getMessage();
+                                            Toast.makeText(AadharRegActivity.this, "Error :" + errorMessage, Toast.LENGTH_LONG).show();
+                                        }
 
-                                        String errorMessage = task.getException().getMessage();
-                                        Toast.makeText(AadharRegActivity.this, "Error :" + errorMessage, Toast.LENGTH_LONG).show();
+                                        AadharRegProgress.setVisibility(View.INVISIBLE);
+
                                     }
+                                });
 
-                                    AadharRegProgress.setVisibility(View.INVISIBLE);
 
-                                }
-                            });
-                        }else {
-                            Toast.makeText(AadharRegActivity.this,"This Aadhaar User Already exist please goto login page or forget id & pass page ",Toast.LENGTH_LONG).show();
+                            }else {
+
+                                Toast.makeText(AadharRegActivity.this, "Confirm Password and Password Field doesn't match.", Toast.LENGTH_LONG).show();
+
+                            }
+                        }else{
+                            Toast.makeText(AadharRegActivity.this,"This Aadhaar user is already exist ",Toast.LENGTH_LONG).show();
                         }
 
-
-                    }else {
-
-                        Toast.makeText(AadharRegActivity.this, "Confirm Password and Password Field doesn't match.", Toast.LENGTH_LONG).show();
-
-                    }
                     }else{
                         Toast.makeText(AadharRegActivity.this,"Please Scan the Aadhaar QR ",Toast.LENGTH_LONG).show();
                     }

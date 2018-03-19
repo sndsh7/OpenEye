@@ -8,6 +8,15 @@
         android:title="@string/Action_search"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_home_btn"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/action_myneta_btn"
+        android:title="@string/my_neta" />
+    <item
+        android:id="@+id/action_setup_btn"
+        android:title="@string/account_setup" />
+    <item
         android:id="@+id/action_settingBtn"
         android:title="@string/action_settings" />
     <item

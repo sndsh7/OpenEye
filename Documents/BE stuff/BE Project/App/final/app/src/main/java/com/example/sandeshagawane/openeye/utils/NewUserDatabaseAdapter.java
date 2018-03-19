@@ -26,9 +26,7 @@ public class NewUserDatabaseAdapter {
         this.postCode = postCode;
     }
 
-    public String getUserID() {
-        return userID;
-    }
+    public String getUserID() {return userID;}
 
     public String getUid() {
         return uid;
@@ -69,4 +67,66 @@ public class NewUserDatabaseAdapter {
     public String getPostCode() {
         return postCode;
     }
+
+    public void setUserID(String UserID) {
+        this.userID = UserID;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setYearOfBirth(String yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
+    }
+
+    public void setCareOf(String careOf) {
+        this.careOf = careOf;
+    }
+
+    public void setVillageTehsil(String villageTehsil) {
+        this.villageTehsil = villageTehsil;
+    }
+
+    public void setPostOffice(String postOffice) {
+        this.postOffice = postOffice;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    @Override
+    public String toString() {
+        return "NewUserDatabaseAdapter{" +
+                "userID='" + userID + '\'' +
+                ", uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", yearOfBirth='" + yearOfBirth + '\'' +
+                ", careOf='" + careOf + '\'' +
+                ", villageTehsil='" + villageTehsil + '\'' +
+                ", postOffice='" + postOffice + '\'' +
+                ", district='" + district + '\'' +
+                ", state='" + state + '\'' +
+                ", postCode='" + postCode + '\'' +
+                '}';
+    }
+
 }
