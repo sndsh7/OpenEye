@@ -45,7 +45,7 @@ import java.io.StringReader;
 
 public class AadharRegActivity extends AppCompatActivity {
     // variables to store extracted xml data
-    String uid,name,gender,yearOfBirth,careOf,villageTehsil,postOffice,district,state,postCode;
+    String uid,name,gender,yearOfBirth,careOf,villageTehsil,postOffice,district,state,postCode,MobileNo,email_ID;
 
     // UI Elements
     public static TextView tv_sd_uid,tv_sd_name,tv_sd_gender,tv_sd_yob,tv_sd_co,tv_sd_vtc,tv_sd_po,tv_sd_dist,
@@ -113,9 +113,11 @@ public class AadharRegActivity extends AppCompatActivity {
                 String UID = tv_sd_uid.getText().toString();
                 String Name = tv_sd_name.getText().toString();
                 String Gender = tv_sd_gender.getText().toString();
+                String Mobile = mobileNo.getText().toString();
+                String voterID = voterId.getText().toString();
 
 
-                if(!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(confirm_pass)){
+                if(!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(confirm_pass) &&!TextUtils.isEmpty(Mobile) && !TextUtils.isEmpty(voterID)){
 
                     if(!TextUtils.isEmpty(UID) && !TextUtils.isEmpty(Name) && !TextUtils.isEmpty(Gender)){
                         //Scan data store to firebase database
@@ -201,13 +203,15 @@ public class AadharRegActivity extends AppCompatActivity {
         String state = tv_sd_state.getText().toString().trim();
         String postOffice = tv_sd_po.getText().toString().trim();
         String postCode = tv_sd_pc.getText().toString().trim();
+        String Mobile = mobileNo.getText().toString().trim();
+        String Email = email.getText().toString().trim();
 
-        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(name) && !TextUtils.isEmpty(gender) && !TextUtils.isEmpty(YOB) && !TextUtils.isEmpty(careOf) && !TextUtils.isEmpty(dist) && !TextUtils.isEmpty(VTC)&& !TextUtils.isEmpty(state) && !TextUtils.isEmpty(postCode)){
+        if(!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(name) && !TextUtils.isEmpty(gender) && !TextUtils.isEmpty(YOB) && !TextUtils.isEmpty(careOf) && !TextUtils.isEmpty(dist) && !TextUtils.isEmpty(VTC)&& !TextUtils.isEmpty(state) && !TextUtils.isEmpty(postCode) && !TextUtils.isEmpty(Mobile) && !TextUtils.isEmpty(Email)){
 
             //IF we want to generate new automatic key
             //String id = mDatabaseUser.push().getKey();
 
-            NewUserDatabaseAdapter User = new NewUserDatabaseAdapter(uid,uid,name,gender,YOB,careOf,VTC,dist,state,postCode,postOffice);
+            NewUserDatabaseAdapter User = new NewUserDatabaseAdapter(uid,uid,name,gender,YOB,careOf,VTC,dist,state,postCode,postOffice,Mobile,Email);
 
             mDatabaseUser.child(uid).setValue(User);
 

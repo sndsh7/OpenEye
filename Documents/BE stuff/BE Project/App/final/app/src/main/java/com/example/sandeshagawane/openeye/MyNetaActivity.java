@@ -18,6 +18,10 @@ public class MyNetaActivity extends AppCompatActivity {
 
         inti();
 
+
+
+
+
     }
 
     /**

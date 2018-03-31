@@ -6,13 +6,13 @@ package com.example.sandeshagawane.openeye.utils;
 
 public class NewUserDatabaseAdapter {
 
-    private String userID,uid,name,gender,yearOfBirth,careOf,villageTehsil,postOffice,district,state,postCode;
+    private String userID,uid,name,gender,yearOfBirth,careOf,villageTehsil,postOffice,district,state,postCode,MobileNo,email_ID;
 
     public NewUserDatabaseAdapter(){
 
     }
 
-    public NewUserDatabaseAdapter(String userID, String uid, String name, String gender, String yearOfBirth, String careOf, String villageTehsil, String postOffice, String district, String state, String postCode) {
+    public NewUserDatabaseAdapter(String userID, String uid, String name, String gender, String yearOfBirth, String careOf, String villageTehsil, String postOffice, String district, String state, String postCode, String MobileNo,String email_ID) {
         this.userID = userID;
         this.uid = uid;
         this.name = name;
@@ -24,6 +24,8 @@ public class NewUserDatabaseAdapter {
         this.district = district;
         this.state = state;
         this.postCode = postCode;
+        this.MobileNo = MobileNo;
+        this.email_ID = email_ID;
     }
 
     public String getUserID() {return userID;}
@@ -67,6 +69,10 @@ public class NewUserDatabaseAdapter {
     public String getPostCode() {
         return postCode;
     }
+
+    public String getMobileNo() {return MobileNo; }
+
+    public String getEmail_ID() {return email_ID; }
 
     public void setUserID(String UserID) {
         this.userID = UserID;
@@ -112,6 +118,10 @@ public class NewUserDatabaseAdapter {
         this.postCode = postCode;
     }
 
+    public void setMobileNo() {this.MobileNo = MobileNo; }
+
+    public void setEmail_ID() {this.email_ID = email_ID; }
+
     @Override
     public String toString() {
         return "NewUserDatabaseAdapter{" +
@@ -126,6 +136,8 @@ public class NewUserDatabaseAdapter {
                 ", district='" + district + '\'' +
                 ", state='" + state + '\'' +
                 ", postCode='" + postCode + '\'' +
+                ", MobileNo='" + MobileNo + '\'' +
+                ", email_ID='" + email_ID + '\'' +
                 '}';
     }
 

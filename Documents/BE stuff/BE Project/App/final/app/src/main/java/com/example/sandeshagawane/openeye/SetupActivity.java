@@ -47,6 +47,7 @@ public class SetupActivity extends AppCompatActivity {
 
     private EditText SetupName;
     private Button saveSettings;
+    public static Spinner ward,profession;
     //firebase
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
@@ -64,9 +65,9 @@ public class SetupActivity extends AppCompatActivity {
 
         //UI elements
         default_profile = (CircleImageView) findViewById(R.id.default_profile_img);
-        Spinner profession = (Spinner) findViewById(R.id.spinnerProfession);
+        profession = (Spinner) findViewById(R.id.spinnerProfession);
         setupProgressbar = findViewById(R.id.setup_progressbar);
-        Spinner ward = (Spinner) findViewById(R.id.spinnerWard);
+        ward = (Spinner) findViewById(R.id.spinnerWard);
         saveSettings = (Button) findViewById(R.id.save_settings_btn);
         SetupName = (EditText) findViewById(R.id.setup_name);
 
@@ -121,7 +122,7 @@ public class SetupActivity extends AppCompatActivity {
 
                 final String user_name = SetupName.getText().toString();
 
-                if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+                if (!TextUtils.isEmpty(user_name) && mainImageURI != null && ward != null) {
 
                     setupProgressbar.setVisibility(View.VISIBLE);
 
@@ -154,6 +155,10 @@ public class SetupActivity extends AppCompatActivity {
                         storeFirestore(null, user_name);
 
                     }
+
+                }else{
+
+                    Toast.makeText(SetupActivity.this,"Please fill details",Toast.LENGTH_LONG).show();
 
                 }
 

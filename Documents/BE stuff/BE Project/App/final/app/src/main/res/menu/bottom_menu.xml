@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_menu_home"
+        android:icon="@mipmap/ic_home_black_24dp"
+        android:title="@string/bottom_menu_home_text" />
+
+    <item
+        android:id="@+id/bottom_menu_account"
+        android:icon="@mipmap/ic_account_box_black_24dp"
+        android:title="@string/bottom_menu_account_text" />
+    <item
+        android:id="@+id/bottom_menu_notif"
+        android:icon="@mipmap/ic_notifications_black_24dp"
+        android:title="@string/bottom_menu_notif_text" />
+
+</menu>
