@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.sandeshagawane.openeye.fragments.AccountFragment;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar mainToolBar;
     private BottomNavigationView bottomNavigationView;
+    private FloatingActionButton postActionButton;
     //Fragments
     private AccountFragment accountFragment;
     private HomeFragment homeFragment;
@@ -43,17 +46,30 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        mainToolBar = (android.support.v7.widget.Toolbar) findViewById (R.id.main_toolbar);
+        mainToolBar =findViewById (R.id.main_toolbar);
         setSupportActionBar(mainToolBar);
         getSupportActionBar().setTitle("Open Eye");
 
         bottomNavigationView = findViewById(R.id.bottom_navi_view);
+        postActionButton = findViewById(R.id.PostActionButton);
+
+        postActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent postIntent = new Intent(MainActivity.this, NewPostActivity.class);
+                startActivity(postIntent);
+                finish();
+
+            }
+        });
 
         //Fragments
         accountFragment = new AccountFragment();
         notificationFragment = new NotificationFragment();
         homeFragment = new HomeFragment();
 
+        //Fragments Select listner
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -177,6 +193,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Replace Fragments and transactions
+     * @param fragment
+     */
     private void replaceFragment(Fragment fragment){
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
