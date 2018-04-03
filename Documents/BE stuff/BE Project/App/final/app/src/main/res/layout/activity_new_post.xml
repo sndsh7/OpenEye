@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_post_toolbar"
-        app:srcCompat="@android:drawable/screen_background_dark_transparent" />
+        app:srcCompat="@drawable/post_placeholder" />
 
     <EditText
         android:id="@+id/new_post_desc"
