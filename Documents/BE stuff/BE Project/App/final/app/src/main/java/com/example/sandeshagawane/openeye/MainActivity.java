@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.sandeshagawane.openeye.fragments.AccountFragment;
 import com.example.sandeshagawane.openeye.fragments.HomeFragment;
 import com.example.sandeshagawane.openeye.fragments.NotificationFragment;
+import com.example.sandeshagawane.openeye.post.NewPostActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

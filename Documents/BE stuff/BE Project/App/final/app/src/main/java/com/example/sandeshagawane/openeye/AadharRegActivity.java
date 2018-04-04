@@ -23,6 +23,7 @@ import com.example.sandeshagawane.openeye.utils.DataAttributes;
 import com.example.sandeshagawane.openeye.utils.NewUserDatabaseAdapter;
 import com.example.sandeshagawane.openeye.utils.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -42,6 +47,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AadharRegActivity extends AppCompatActivity {
     // variables to store extracted xml data
@@ -54,6 +61,9 @@ public class AadharRegActivity extends AppCompatActivity {
     private EditText voterId,mobileNo,email,password,confPassword;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUser;
+    private FirebaseFirestore firebaseFirestore;
+    private StorageReference storageReference;
+
     private Button QRScanBtn,RegBtn;
     private FloatingActionButton BacktoReg;
     private ProgressBar AadharRegProgress;
@@ -68,6 +78,10 @@ public class AadharRegActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabaseUser = FirebaseDatabase.getInstance().getReference("Users");
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+
         AadharRegProgress= (ProgressBar)findViewById(R.id.uid_reg_progress);
 
         tv_sd_uid = (TextView)findViewById(R.id.editUid);
@@ -107,14 +121,14 @@ public class AadharRegActivity extends AppCompatActivity {
         RegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String Email = email.getText().toString();
-                String pass = password.getText().toString();
-                String confirm_pass= confPassword.getText().toString();
-                String UID = tv_sd_uid.getText().toString();
-                String Name = tv_sd_name.getText().toString();
-                String Gender = tv_sd_gender.getText().toString();
-                String Mobile = mobileNo.getText().toString();
-                String voterID = voterId.getText().toString();
+                final String Email = email.getText().toString();
+                final String pass = password.getText().toString();
+                final String confirm_pass= confPassword.getText().toString();
+                final String UID = tv_sd_uid.getText().toString();
+                final String Name = tv_sd_name.getText().toString();
+                final String Gender = tv_sd_gender.getText().toString();
+                final String Mobile = mobileNo.getText().toString();
+                final String voterID = voterId.getText().toString();
 
 
                 if(!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(confirm_pass) &&!TextUtils.isEmpty(Mobile) && !TextUtils.isEmpty(voterID)){
@@ -128,13 +142,16 @@ public class AadharRegActivity extends AppCompatActivity {
                             if(pass.equals(confirm_pass)){
 
                                 AadharRegProgress.setVisibility(View.VISIBLE);
-                                addUser();
                                 mAuth.createUserWithEmailAndPassword(Email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                                         if (task.isSuccessful()) {
+
+                                            storeFirestore();
+                                            addUser();
+
                                             Intent setupIntent = new Intent(AadharRegActivity.this, SetupActivity.class);
                                             startActivity(setupIntent);
                                             finish();
@@ -190,6 +207,51 @@ public class AadharRegActivity extends AppCompatActivity {
 
 
     }
+    private void storeFirestore() {
+
+
+
+        String uid = tv_sd_uid.getText().toString();
+        String name = tv_sd_name.getText().toString();
+        String gender = tv_sd_gender.getText().toString();
+        String YOB = tv_sd_yob.getText().toString();
+        String careOf = tv_sd_co.getText().toString();
+        String VTC = tv_sd_vtc.getText().toString();
+        String dist = tv_sd_dist.getText().toString();
+        String state = tv_sd_state.getText().toString();
+        String postOffice = tv_sd_po.getText().toString();
+        String postCode = tv_sd_pc.getText().toString();
+        String Mobile = mobileNo.getText().toString();
+        String Email = email.getText().toString();
+
+        Map< String, String > UserData = new HashMap< >();
+
+        UserData.put("Aadhaar No.",uid);
+        UserData.put("Name",name);
+        UserData.put("Gender",gender);
+        UserData.put("Year of Birth",YOB);
+        UserData.put("Care Of", careOf);
+        UserData.put("Village", VTC);
+        UserData.put("District", dist);
+        UserData.put("State",state);
+        UserData.put("Gender", gender);
+        UserData.put("Post Office",postOffice);
+        UserData.put("Postal Code",postCode);
+        UserData.put("Mobile NO.", Mobile);
+        UserData.put("Email ID", Email);
+
+        firebaseFirestore.collection("UserData").add(UserData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+
+                Toast.makeText(AadharRegActivity.this,"Data add to cloud",Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+
     //Scan data store to firebase database
     private void addUser() {
 
@@ -215,9 +277,11 @@ public class AadharRegActivity extends AppCompatActivity {
 
             mDatabaseUser.child(uid).setValue(User);
 
+
         }else {
             Toast.makeText(this,"Database store Error :",Toast.LENGTH_LONG).show();
         }
+
 
     }
 

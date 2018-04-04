@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sandeshagawane.openeye.BlogPost;
-import com.example.sandeshagawane.openeye.BlogRecyclerAdapter;
+import com.example.sandeshagawane.openeye.post.BlogPost;
+import com.example.sandeshagawane.openeye.post.BlogRecyclerAdapter;
 import com.example.sandeshagawane.openeye.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;

@@ -1,4 +1,4 @@
-package com.example.sandeshagawane.openeye;
+package com.example.sandeshagawane.openeye.post;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.sandeshagawane.openeye.MainActivity;
+import com.example.sandeshagawane.openeye.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

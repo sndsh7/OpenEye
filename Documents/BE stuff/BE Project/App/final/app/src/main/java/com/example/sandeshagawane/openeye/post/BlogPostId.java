@@ -1,4 +1,4 @@
-package com.example.sandeshagawane.openeye;
+package com.example.sandeshagawane.openeye.post;
 
 import android.support.annotation.NonNull;
 
