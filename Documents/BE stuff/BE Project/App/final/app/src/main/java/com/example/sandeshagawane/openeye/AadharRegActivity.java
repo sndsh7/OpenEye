@@ -23,15 +23,13 @@ import com.example.sandeshagawane.openeye.utils.DataAttributes;
 import com.example.sandeshagawane.openeye.utils.NewUserDatabaseAdapter;
 import com.example.sandeshagawane.openeye.utils.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -80,6 +78,7 @@ public class AadharRegActivity extends AppCompatActivity {
         mDatabaseUser = FirebaseDatabase.getInstance().getReference("Users");
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+        user_id = FirebaseAuth.getInstance().getUid();
 
 
         AadharRegProgress= (ProgressBar)findViewById(R.id.uid_reg_progress);
@@ -105,17 +104,6 @@ public class AadharRegActivity extends AppCompatActivity {
         password=(EditText)findViewById(R.id.editPassword);
         confPassword=(EditText)findViewById(R.id.editCPassword);
 
-        //Retrive Data
-        mDatabaseUser.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                user_id = dataSnapshot.child("Users").getValue(String.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
 
         //Registration Processs Creating Account on Firebase
         RegBtn.setOnClickListener(new View.OnClickListener() {
@@ -135,9 +123,7 @@ public class AadharRegActivity extends AppCompatActivity {
 
                     if(!TextUtils.isEmpty(UID) && !TextUtils.isEmpty(Name) && !TextUtils.isEmpty(Gender)){
                         //Scan data store to firebase database
-                        if(!TextUtils.equals(UID, user_id)){
 
-                            Toast.makeText(AadharRegActivity.this,""+user_id,Toast.LENGTH_LONG).show();
 
                             if(pass.equals(confirm_pass)){
 
@@ -174,9 +160,6 @@ public class AadharRegActivity extends AppCompatActivity {
                                 Toast.makeText(AadharRegActivity.this, "Confirm Password and Password Field doesn't match.", Toast.LENGTH_LONG).show();
 
                             }
-                        }else{
-                            Toast.makeText(AadharRegActivity.this,"This Aadhaar user is already exist ",Toast.LENGTH_LONG).show();
-                        }
 
                     }else{
                         Toast.makeText(AadharRegActivity.this,"Please Scan the Aadhaar QR ",Toast.LENGTH_LONG).show();
@@ -226,31 +209,31 @@ public class AadharRegActivity extends AppCompatActivity {
 
         Map< String, String > UserData = new HashMap< >();
 
-        UserData.put("Aadhaar No.",uid);
-        UserData.put("Name",name);
-        UserData.put("Gender",gender);
-        UserData.put("Year of Birth",YOB);
-        UserData.put("Care Of", careOf);
-        UserData.put("Village", VTC);
-        UserData.put("District", dist);
-        UserData.put("State",state);
-        UserData.put("Gender", gender);
-        UserData.put("Post Office",postOffice);
-        UserData.put("Postal Code",postCode);
-        UserData.put("Mobile NO.", Mobile);
-        UserData.put("Email ID", Email);
+        UserData.put("uid",uid);
+        UserData.put("name",name);
+        UserData.put("gender",gender);
+        UserData.put("yob",YOB);
+        UserData.put("careof", careOf);
+        UserData.put("vtc", VTC);
+        UserData.put("dist", dist);
+        UserData.put("state",state);
+        UserData.put("postoffice",postOffice);
+        UserData.put("postcode",postCode);
+        UserData.put("mobileno", Mobile);
+        UserData.put("email", Email);
 
-        firebaseFirestore.collection("UserData").add(UserData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        firebaseFirestore.collection("aadhaar_data").document("users").set(UserData).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
+            public void onFailure(@NonNull Exception e) {
 
-                Toast.makeText(AadharRegActivity.this,"Data add to cloud",Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(AadharRegActivity.this, "Error"+e.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });
 
-    }
 
+    }
 
     //Scan data store to firebase database
     private void addUser() {

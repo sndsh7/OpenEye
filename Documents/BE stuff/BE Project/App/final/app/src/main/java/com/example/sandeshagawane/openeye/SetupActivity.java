@@ -9,14 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +24,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,20 +40,54 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SetupActivity extends AppCompatActivity {
 
+    private static final String FIRE_LOG = "FIRE_LOG";
+
     private CircleImageView default_profile;
     private Uri mainImageURI = null;
     private ProgressBar setupProgressbar;
     private boolean isChanged = false;
     private String user_id;
 
-    private EditText SetupName;
+    private TextView SetupName,S_uid,S_careof,S_gender,S_yob,S_dist,S_state,S_postcode,S_email,S_mobile,S_vtc;
     private Button saveSettings;
-    public static Spinner ward,profession;
+    //public static Spinner ward,profession;
     //firebase
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        firebaseFirestore.collection("aadhaar_data").document("users").addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+
+                String name = documentSnapshot.getString("name");
+                String uid = documentSnapshot.getString("uid");
+                String careof = documentSnapshot.getString("careof");
+                String gender = documentSnapshot.getString("gender");
+                String vtc = documentSnapshot.getString("vtc");
+                String dist = documentSnapshot.getString("dist");
+                String state = documentSnapshot.getString("state");
+                String email = documentSnapshot.getString("email");
+                String postcode= documentSnapshot.getString("postcode");
+
+                SetupName.setText(name);
+                S_uid.setText("Aadhaar No. : " + uid);
+                S_careof.setText("Care Of : " + careof);
+                S_gender.setText("Gender : " + gender);
+                S_dist.setText("District : " + dist);
+                S_email.setText("Email ID : "+email);
+                S_vtc.setText("Village : " + vtc);
+                S_state.setText("State : " + state);
+                S_postcode.setText("Post Code : " + postcode);
+
+            }
+        });
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +99,18 @@ public class SetupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Account Setup");
 
         //UI elements
-        default_profile = (CircleImageView) findViewById(R.id.default_profile_img);
-        profession = (Spinner) findViewById(R.id.spinnerProfession);
+        default_profile =findViewById(R.id.default_profile_img);
         setupProgressbar = findViewById(R.id.setup_progressbar);
-        ward = (Spinner) findViewById(R.id.spinnerWard);
-        saveSettings = (Button) findViewById(R.id.save_settings_btn);
-        SetupName = (EditText) findViewById(R.id.setup_name);
+        saveSettings =findViewById(R.id.save_settings_btn);
+        SetupName = findViewById(R.id.setup_name);
+        S_uid = findViewById(R.id.s_uid);
+        S_careof=findViewById(R.id.s_careof);
+        S_dist=findViewById(R.id.s_dist);
+        S_email=findViewById(R.id.s_email);
+        S_gender=findViewById(R.id.s_gender);
+        S_vtc=findViewById(R.id.s_vtc);
+        S_postcode=findViewById(R.id.s_postcode);
+        S_state=findViewById(R.id.s_state);
 
         //Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
@@ -88,12 +129,12 @@ public class SetupActivity extends AppCompatActivity {
 
                     if(task.getResult().exists()){
 
-                        String name = task.getResult().getString("name");
+                        //String name = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
 
                         mainImageURI = Uri.parse(image);
 
-                        SetupName.setText(name);
+                        //SetupName.setText(name);
 
                         RequestOptions placeholderRequest = new RequestOptions();
                         placeholderRequest.placeholder(R.drawable.default_profile_male);
@@ -116,13 +157,37 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
+        firebaseFirestore.collection("aadhaar_data").document("users").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if(task.isSuccessful()) {
+
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists() && documentSnapshot != null) {
+
+                        String name = documentSnapshot.getString("name");
+
+                        SetupName.setText(name);
+
+
+                    }
+                }else{
+
+                    Log.d(FIRE_LOG,"Error"+ task.getException().getMessage());
+
+                }
+
+            }
+        });
+
         saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final String user_name = SetupName.getText().toString();
 
-                if (!TextUtils.isEmpty(user_name) && mainImageURI != null && ward != null) {
+
 
                     setupProgressbar.setVisibility(View.VISIBLE);
 
@@ -155,12 +220,6 @@ public class SetupActivity extends AppCompatActivity {
                         storeFirestore(null, user_name);
 
                     }
-
-                }else{
-
-                    Toast.makeText(SetupActivity.this,"Please fill details",Toast.LENGTH_LONG).show();
-
-                }
 
             }
 
@@ -333,6 +392,11 @@ public class SetupActivity extends AppCompatActivity {
      * LOGOUT
      */
     private void logOut_activity() {
+        firebaseAuth.signOut();
+        logout();
+    }
+
+    private void logout() {
         Intent logoutIntent = new Intent(SetupActivity.this,LoginActivity.class);
         startActivity(logoutIntent);
         finish();
