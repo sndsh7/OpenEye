@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name= "ward_list" >
+        <item>None</item>
+        <item>Ward A</item>
+        <item>Ward B</item>
+        <item>Ward C</item>
+        <item>Ward D</item>
+        <item>Ward E</item>
+        <item>Ward F South</item>
+        <item>Ward F North</item>
+        <item>Ward G South</item>
+        <item>Ward G Notrh</item>
+        <item>Ward H East</item>
+        <item>Ward H West</item>
+        <item>Ward K East</item>
+        <item>Ward K West</item>
+        <item>Ward L</item>
+        <item>Ward M West</item>
+        <item>Ward M East</item>
+        <item>Ward N</item>
+        <item>Ward P South</item>
+        <item>Ward P North</item>
+        <item>Ward R South</item>
+        <item>Ward R Central</item>
+        <item>Ward R North</item>
+        <item>Ward S</item>
+        <item>Ward T</item>
+    </string-array>
+
+    <string-array name="ward_RC_council">
+        <item>WARD No. 9/KORGAONKAR SWETA S.</item>
+        <item>WARD No. 10/PATEL JITENDRA A.</item>
+        <item>WARD No. 11/KHURSANGE RIDDHI B.</item>
+        <item>WARD No. 12/SINGHAN GEETA S.</item>
+        <item>WARD No. 13/VIDHYARTHI SINGH</item>
+        <item>WARD No. 14/PATIL ASAWARI</item>
+        <item>WARD No. 15/SHAH PRAVIN R.</item>
+        <item>WARD No. 16/KHEDEKAR ANJALI A.</item>
+        <item>WARD No. 17/DOSHI BEENA P.</item>
+        <item>WARD No. 18/DOSHI SANDHYA V.</item>
+    </string-array>
+
+    <string-array name="ward_RS_council">
+        <item>WARD No. 19/GUDHEKAR SHUBHADA S.</item>
+        <item>WARD No. 20/TAWADE DEEPAK</item>
+        <item>WARD No. 21/GIRKAR SHAILAJA V.</item>
+        <item>WARD No. 22/MORE PRIYANKA P.</item>
+        <item>WARD No. 23/ZA SHIVKUMAR</item>
+        <item>WARD No. 24/YADAV SUNITA R.</item>
+        <item>WARD No. 25/BHOIR MADHURI Y.</item>
+        <item>WARD No. 26/PANDAGALE PRITAM G.</item>
+        <item>WARD No. 27/PATIL SUREKHA M.</item>
+        <item>WARD No. 28/YADAV RAJPATI B.</item>
+        <item>WARD No. 29/THAKUR SAGAR R.</item>
+        <item>WARD No. 30/LEENA PATEL-DEHERKAR</item>
+        <item>WARD No. 31/YADAV KAMLESH S.</item>
+    </string-array>
+
+</resources>

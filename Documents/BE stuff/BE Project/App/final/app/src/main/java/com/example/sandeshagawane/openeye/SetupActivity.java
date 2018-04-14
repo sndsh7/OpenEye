@@ -60,7 +60,7 @@ public class SetupActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        firebaseFirestore.collection("aadhaar_data").document("users").addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Aadhaar Data").document(user_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
 
@@ -127,7 +127,9 @@ public class SetupActivity extends AppCompatActivity {
 
                 if(task.isSuccessful()){
 
-                    if(task.getResult().exists()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+
+                    if(documentSnapshot.exists()){
 
                         //String name = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
@@ -157,7 +159,7 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
-        firebaseFirestore.collection("aadhaar_data").document("users").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Aadhaar Data").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 

@@ -23,7 +23,6 @@ import com.example.sandeshagawane.openeye.utils.DataAttributes;
 import com.example.sandeshagawane.openeye.utils.NewUserDatabaseAdapter;
 import com.example.sandeshagawane.openeye.utils.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,7 +61,7 @@ public class AadharRegActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
 
-    private Button QRScanBtn,RegBtn;
+    private Button QRScanBtn, RegBtn;
     private FloatingActionButton BacktoReg;
     private ProgressBar AadharRegProgress;
     String user_id;
@@ -78,7 +77,7 @@ public class AadharRegActivity extends AppCompatActivity {
         mDatabaseUser = FirebaseDatabase.getInstance().getReference("Users");
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        user_id = FirebaseAuth.getInstance().getUid();
+
 
 
         AadharRegProgress= (ProgressBar)findViewById(R.id.uid_reg_progress);
@@ -103,7 +102,6 @@ public class AadharRegActivity extends AppCompatActivity {
         mobileNo=(EditText)findViewById(R.id.editMobile);
         password=(EditText)findViewById(R.id.editPassword);
         confPassword=(EditText)findViewById(R.id.editCPassword);
-
 
         //Registration Processs Creating Account on Firebase
         RegBtn.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +132,7 @@ public class AadharRegActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                                         if (task.isSuccessful()) {
-
+                                            user_id = mAuth.getCurrentUser().getUid();
                                             storeFirestore();
                                             addUser();
 
@@ -222,7 +220,29 @@ public class AadharRegActivity extends AppCompatActivity {
         UserData.put("mobileno", Mobile);
         UserData.put("email", Email);
 
-        firebaseFirestore.collection("aadhaar_data").document("users").set(UserData).addOnFailureListener(new OnFailureListener() {
+        firebaseFirestore.collection("Aadhaar Data").document(user_id).set(UserData).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if(task.isSuccessful()){
+
+                    Toast.makeText(AadharRegActivity.this, "Aadhaar data store to cloud", Toast.LENGTH_LONG).show();
+                    Intent mainIntent = new Intent(AadharRegActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    finish();
+
+                } else {
+
+                    String error = task.getException().getMessage();
+                    Toast.makeText(AadharRegActivity.this, "(FIRESTORE Error) : " + error, Toast.LENGTH_LONG).show();
+
+                }
+
+
+            }
+        });
+
+        /*firebaseFirestore.collection("aadhaar_data").document("users").set(UserData).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
 
@@ -230,7 +250,7 @@ public class AadharRegActivity extends AppCompatActivity {
                     Toast.makeText(AadharRegActivity.this, "Error"+e.getMessage(), Toast.LENGTH_LONG).show();
 
             }
-        });
+        });*/
 
 
     }

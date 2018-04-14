@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="complaint_type">
+        <item>Select Complaint Type</item>
+        <item>Solid waste management</item>
+        <item>Drainage</item>
+        <item>Storm water drain</item>
+        <item>Roads and Traffics</item>
+        <item>Factories</item>
+        <item>Licence</item>
+        <item>Water supply</item>
+        <item>Colony Officer</item>
+        <item>Pest Control</item>
+        <item>Buildings</item>
+        <item>Repair to municipal property</item>
+        <item>Health</item>
+        <item>Garden and Tree</item>
+        <item>Encroachment</item>
+        <item>Shops and Establishment</item>
+        <item>School</item>
+        <item>Estate</item>
+        <item>Sewerage Operational Control</item>
+        <item>Legal</item>
+        <item>Assessment</item>
+        <item>Office Superintendent</item>
+        <item>Retried Employee Complaint</item>
+    </string-array>
+
+    <string-array name="Solid_waste_management">
+        <item>Garbage not lifted from co-authorised collection point</item>
+        <item>Garbage not lifted from house gully</item>
+        <item>Collection point not attended properly</item>
+        <item>Garbage not lifted from municipal market</item>
+        <item>Garbage lorry not reported for service</item>
+        <item>Garbage lorry not covered</item>
+        <item>Remove of dead animals</item>
+        <item>Sweeping a road</item>
+        <item>Lifting of tree cutting</item>
+    </string-array>
+
+    <string-array name="Drainage">
+
+    </string-array>
+
+    <string-array name="Storm_water_drain">
+
+    </string-array>
+
+    <string-array name="Roads_and_Traffics">
+
+    </string-array>
+
+    <string-array name="Factories">
+
+    </string-array>
+
+    <string-array name="Licence">
+
+    </string-array>
+
+    <string-array name="Water_supply">
+
+    </string-array>
+
+    <string-array name="Colony_Officer">
+
+    </string-array>
+
+    <string-array name="Pest_Control">
+
+    </string-array>
+
+    <string-array name="Buildings">
+
+    </string-array>
+
+    <string-array name="Repair_to_municipal_property">
+
+    </string-array>
+
+    <string-array name="Health">
+
+    </string-array>
+
+    <string-array name="Garden_and_Tree">
+
+    </string-array>
+
+    <string-array name="Encroachment">
+
+    </string-array>
+
+    <string-array name="Shops_and_Establishment">
+
+    </string-array>
+
+    <string-array name="School">
+
+    </string-array>
+
+    <string-array name="Estate">
+
+    </string-array>
+
+    <string-array name="Sewerage_Operational_Control">
+
+    </string-array>
+
+    <string-array name="Legal">
+
+    </string-array>
+
+    <string-array name="Assessment">
+
+    </string-array>
+
+    <string-array name="Office_Superintendent">
+
+    </string-array>
+
+    <string-array name="Retired_Emplyee_complaint">
+
+    </string-array>
+</resources>

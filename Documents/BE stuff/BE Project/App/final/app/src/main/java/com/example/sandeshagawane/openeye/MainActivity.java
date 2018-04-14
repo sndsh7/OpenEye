@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         notificationFragment = new NotificationFragment();
         homeFragment = new HomeFragment();
 
+        replaceFragment(homeFragment);
+
         //Fragments Select listner
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -169,9 +171,23 @@ public class MainActivity extends AppCompatActivity {
                 setup_activity();
                 return true;
 
+            case R.id.action_myneta_btn:
+
+                myneta_activity();
+                return true;
+
+
             default:
                 return false;
         }
+
+    }
+
+    private void myneta_activity() {
+
+        Intent mynetaintent = new Intent(MainActivity.this,MyNetaActivity.class);
+        startActivity(mynetaintent);
+        finish();
 
     }
 

@@ -69,6 +69,12 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         String desc_data = blog_list.get(position).getDesc();
         holder.setDescText(desc_data);
 
+        String complaint_data = blog_list.get(position).getComplaint();
+        holder.setComplaintText(complaint_data);
+
+        String subcomplaint_data = blog_list.get(position).getSubcomplaint();
+        holder.setSubcomplaintText(subcomplaint_data);
+
         String image_url = blog_list.get(position).getImage_url();
         String thumbUri = blog_list.get(position).getImage_thumb();
         holder.setBlogImage(image_url, thumbUri);
@@ -81,10 +87,15 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
                 if(task.isSuccessful()){
 
-                    String userName = task.getResult().getString("name");
-                    String userImage = task.getResult().getString("image");
+                    DocumentSnapshot documentSnapshot = task.getResult();
 
-                    holder.setUserData(userName, userImage);
+                    if(documentSnapshot.exists()) {
+
+                        String userName = task.getResult().getString("name");
+                        String userImage = task.getResult().getString("image");
+
+                        holder.setUserData(userName, userImage);
+                    }
 
 
                 } else {
@@ -195,6 +206,8 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         private View mView;
 
         private TextView descView;
+        private TextView complaintView;
+        private TextView subcomplaintView;
         private ImageView blogImageView;
         private TextView blogDate;
 
@@ -220,6 +233,20 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
             descView = mView.findViewById(R.id.blog_desc);
             descView.setText(descText);
+
+        }
+
+        public void setComplaintText(String complaintText){
+
+            complaintView = mView.findViewById(R.id.complaint_textView);
+            complaintView.setText(complaintText);
+
+        }
+
+        public void setSubcomplaintText(String subcomplaintText){
+
+            subcomplaintView = mView.findViewById(R.id.subcomplaint_textView);
+            subcomplaintView.setText(subcomplaintText);
 
         }
 

@@ -5,17 +5,20 @@ import java.util.Date;
 
 public class BlogPost extends BlogPostId {
 
-    public String user_id, image_url, desc, image_thumb;
+    public String user_id, image_url, desc, image_thumb, complaint, subcomplaint;
     public Date timestamp;
 
     public BlogPost() {}
 
-    public BlogPost(String user_id, String image_url, String desc, String image_thumb, Date timestamp) {
+
+    public BlogPost(String user_id, String image_url, String desc, String image_thumb, Date timestamp, String complaint, String subcomplaint) {
         this.user_id = user_id;
         this.image_url = image_url;
         this.desc = desc;
         this.image_thumb = image_thumb;
         this.timestamp = timestamp;
+        this.complaint = complaint;
+        this.subcomplaint = subcomplaint;
     }
 
     public String getUser_id() {
@@ -58,5 +61,18 @@ public class BlogPost extends BlogPostId {
         this.timestamp = timestamp;
     }
 
+    public String getComplaint() {
+        return complaint;
+    }
+    public void setComplaint(String complaint) {
+        this.complaint = complaint;
+    }
 
+
+    public String getSubcomplaint() {
+        return subcomplaint;
+    }
+    public void setSubcomplaint(String subcomplaint) {
+        this.subcomplaint = subcomplaint;
+    }
 }

@@ -9,10 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sandeshagawane.openeye.MainActivity;
@@ -40,7 +43,7 @@ import java.util.UUID;
 
 import id.zelory.compressor.Compressor;
 
-public class NewPostActivity extends AppCompatActivity {
+public class NewPostActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Toolbar newPostToolbar;
 
@@ -60,6 +63,8 @@ public class NewPostActivity extends AppCompatActivity {
 
     private Bitmap compressedImageFile;
 
+    private Spinner complaint, subcomplaint;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +79,37 @@ public class NewPostActivity extends AppCompatActivity {
 
         newPostToolbar = findViewById(R.id.new_post_toolbar);
         setSupportActionBar(newPostToolbar);
-        getSupportActionBar().setTitle("Add New Post");
+        getSupportActionBar().setTitle("Add New Complaint");
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         newPostImage = findViewById(R.id.new_post_image);
         newPostDesc = findViewById(R.id.new_post_desc);
         newPostBtn = findViewById(R.id.post_btn);
         newPostProgress = findViewById(R.id.new_post_progress);
+
+        //spinner
+        complaint = findViewById(R.id.complaint_spinner);
+        subcomplaint= findViewById(R.id.subcomplaint_spinner);
+        //To get value from Sub Complaints
+        subcomplaint.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        //spinner link with XML
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.complaint_type,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        complaint.setAdapter(adapter);
+        complaint.setOnItemSelectedListener(this);
 
         newPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +129,10 @@ public class NewPostActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final String desc = newPostDesc.getText().toString();
+                final String complaints = (String)complaint.getSelectedItem();
+                final String subcomplaints = (String)subcomplaint.getSelectedItem();
 
-                if(!TextUtils.isEmpty(desc) && postImageUri != null){
+                if(!TextUtils.isEmpty(desc) && postImageUri != null && !TextUtils.isEmpty(complaints) && !TextUtils.isEmpty(subcomplaints)){
 
                     newPostProgress.setVisibility(View.VISIBLE);
 
@@ -166,6 +197,8 @@ public class NewPostActivity extends AppCompatActivity {
                                         postMap.put("image_url", downloadUri);
                                         postMap.put("image_thumb", downloadthumbUri);
                                         postMap.put("desc", desc);
+                                        postMap.put("complaint",complaints);
+                                        postMap.put("subcomplaint",subcomplaints);
                                         postMap.put("user_id", current_user_id);
                                         postMap.put("timestamp", FieldValue.serverTimestamp());
 
@@ -211,6 +244,9 @@ public class NewPostActivity extends AppCompatActivity {
                     });
 
 
+                }else{
+                    Toast.makeText(NewPostActivity.this,"Please fill all the details",Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -218,6 +254,7 @@ public class NewPostActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -239,4 +276,31 @@ public class NewPostActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        String Complaint_value = (String)complaint.getSelectedItem();
+
+        switch (Complaint_value){
+
+            case "Solid waste management":
+                SolidWasteManagment();
+
+        }
+
+    }
+
+    private void SolidWasteManagment() {
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Solid_waste_management,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subcomplaint.setAdapter(adapter);
+
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
